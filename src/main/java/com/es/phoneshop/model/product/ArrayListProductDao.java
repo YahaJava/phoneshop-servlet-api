@@ -38,32 +38,34 @@ public class ArrayListProductDao implements ProductDao {
 
     @Override
     public synchronized Product getProduct(Long id) {
-        Product product=products.stream().filter(s -> (s.getId().equals(id))).findFirst().orElse(null);
-        if(product!=null)
-            return product;
-        else throw new NullPointerException("Product with such id is not found");
+        Product product = products.stream()
+                .filter(product1 -> (product1.getId().equals(id)))
+                .findFirst().orElseThrow(() -> new IllegalArgumentException());
+        return product;
     }
 
     @Override
     public synchronized List<Product> findProducts() {
-        return products.stream()
-                .filter(s -> ((s.getStock() > 0) && (!new BigDecimal(0).equals(s.getPrice()))))
+        return  products.stream()
+                .filter(product -> ((product.getStock() > 0) && (product.getPrice() != null)))
                 .collect(Collectors.toList());
+
     }
 
     @Override
     public synchronized void save(Product product) {
-        if (products.stream().noneMatch(s -> s.getId().equals(product.getId())))
+        if (products.stream().noneMatch(product1 -> product1.getId().equals(product.getId()))) {
             products.add(product);
-        else
-            throw new NullPointerException("Product with such id is already exist");
+        } else {
+            throw new IllegalArgumentException("Product with such id is already exist");
+        }
     }
 
     @Override
     public synchronized void delete(Long id) {
-        Product product=products.stream().filter(s -> (s.getId().equals(id))).findFirst().orElse(null);
-        if(product!=null)
-            products.remove(product);
-        else throw new NullPointerException("Product with such id is not found");
+        Product product = products.stream().
+                filter(product1 -> (product1.getId().equals(id)))
+                .findFirst().orElseThrow(() -> new IllegalArgumentException("Product with such id is not found"));
+        products.remove(product);
     }
 }

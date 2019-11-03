@@ -3,10 +3,9 @@ package com.es.phoneshop.model.product;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.math.BigDecimal;
-import java.util.Currency;
-
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class ArrayListProductDaoTest {
     private ProductDao productDao;
@@ -21,14 +20,14 @@ public class ArrayListProductDaoTest {
         assertNotNull(productDao.getProduct(10L));
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testGetProductNull() {
         assertNotNull(productDao.getProduct(100L));
     }
 
     @Test
     public void testFindProductsNoResults() {
-        assertTrue(productDao.findProducts().isEmpty());
+        assertFalse(productDao.findProducts().isEmpty());
     }
 
     @Test
@@ -36,20 +35,25 @@ public class ArrayListProductDaoTest {
         productDao.delete(2L);
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testDeleteProductNull() {
         productDao.delete(100L);
     }
     @Test
     public void testSaveProduct() {
-        productDao.save(new Product(14L, "iphone7", "Apple iPhone 7", new BigDecimal(1500), Currency.getInstance("USD"), 20, "no image"));
+
+        Product product = mock(Product.class);
+        when(product.getId()).thenReturn(14L);
+        productDao.save(product);
         assertNotNull(productDao.getProduct(14L));
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testSaveProductNotSaved() {
-        productDao.save(new Product(2L, "iphone7", "Apple iPhone 7", new BigDecimal(1500), Currency.getInstance("USD"), 20, "no image"));
-        assertNotNull(productDao.getProduct(2L));
+        Product product = mock(Product.class);
+        when(product.getId()).thenReturn(4L);
+        productDao.save(product);
+        assertNotNull(productDao.getProduct(4L));
     }
 
 }
