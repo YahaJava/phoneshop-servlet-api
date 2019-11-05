@@ -40,7 +40,7 @@ public class ArrayListProductDao implements ProductDao {
     public synchronized Product getProduct(Long id) {
         Product product = products.stream()
                 .filter(product1 -> (product1.getId().equals(id)))
-                .findFirst().orElseThrow(() -> new IllegalArgumentException());
+                .findFirst().orElseThrow(() -> new IllegalArgumentException("Product with such id is not found"));
         return product;
     }
 
@@ -54,17 +54,22 @@ public class ArrayListProductDao implements ProductDao {
 
     @Override
     public synchronized void save(Product product) {
-        if (products.stream().noneMatch(product1 -> product1.getId().equals(product.getId()))) {
+        if (checkIdForSave(product)) {
             products.add(product);
         } else {
             throw new IllegalArgumentException("Product with such id is already exist");
         }
     }
 
+    private boolean checkIdForSave(Product product)
+    {
+       return products.stream().noneMatch(product1 -> product1.getId().equals(product.getId()));
+    }
+
     @Override
     public synchronized void delete(Long id) {
-        Product product = products.stream().
-                filter(product1 -> (product1.getId().equals(id)))
+        Product product = products.stream()
+                .filter(product1 -> (product1.getId().equals(id)))
                 .findFirst().orElseThrow(() -> new IllegalArgumentException("Product with such id is not found"));
         products.remove(product);
     }

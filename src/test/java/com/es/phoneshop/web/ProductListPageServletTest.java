@@ -37,12 +37,6 @@ public class ProductListPageServletTest {
     public void testDoGet() throws ServletException, IOException {
         servlet.doGet(request, response);
         verify(requestDispatcher).forward(request, response);
-        verify(request,times(1)).setAttribute(anyString(),any());
-    }
-    @Test
-    public void testGetProductsFromDAO()
-    {
-        assertTrue(servlet.getSampleProducts().size()>0);
     }
 
 }
