@@ -9,10 +9,9 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 
@@ -32,8 +31,8 @@ public class ArrayListProductDaoTest {
 
     @Before
     public void setUp() {
-        productDao =new ArrayListProductDao(new ArrayList<>(Arrays.asList(product1,product2,product3)));
-
+        ArrayListProductDao.setInstance(new ArrayList<Product>(Arrays.asList(product1,product2,product3)));
+        productDao =ArrayListProductDao.getInstance();
         when(product1.getId()).thenReturn(1L);
         when(product2.getId()).thenReturn(2L);
         when(product3.getId()).thenReturn(3L);
@@ -50,18 +49,60 @@ public class ArrayListProductDaoTest {
     }
 
     @Test
-    public void testFindProductsNoResults() {
+    public void testFindProductsSearch(){
 
         when(product1.getPrice()).thenReturn(new BigDecimal(100));
-        when(product2.getPrice()).thenReturn(null);
+        when(product2.getPrice()).thenReturn(new BigDecimal(200));
         when(product3.getPrice()).thenReturn(new BigDecimal(120));
 
         when(product1.getStock()).thenReturn(50);
         when(product2.getStock()).thenReturn(40);
-        when(product3.getStock()).thenReturn(0);
+        when(product3.getStock()).thenReturn(35);
 
-        assertTrue( productDao.findProducts().size() == 1);
+        when(product1.getDescription()).thenReturn("Samsung G7");
+        when(product2.getDescription()).thenReturn("Samsung G6");
+        when(product3.getDescription()).thenReturn("Apple 8");
 
+       assertTrue( productDao.findProducts("samsung","price","asc").size() == 2);
+
+    }
+
+    @Test
+    public void testFindProductsSortDescriptionAscending(){
+
+        when(product1.getPrice()).thenReturn(new BigDecimal(100));
+        when(product2.getPrice()).thenReturn(new BigDecimal(200));
+        when(product3.getPrice()).thenReturn(new BigDecimal(120));
+
+        when(product1.getStock()).thenReturn(50);
+        when(product2.getStock()).thenReturn(40);
+        when(product3.getStock()).thenReturn(35);
+
+        when(product1.getDescription()).thenReturn("Samsung G7");
+        when(product2.getDescription()).thenReturn("Nokia X6");
+        when(product3.getDescription()).thenReturn("Apple 8");
+
+        ArrayList<Product> filteredList = (ArrayList) productDao.findProducts("","description","asc");
+
+        assertSame(product3.getId(),filteredList.get(0).getId());
+
+    }
+
+    @Test
+    public void testFindProductsSortPriceDescending(){
+
+        when(product1.getPrice()).thenReturn(new BigDecimal(200));
+        when(product2.getPrice()).thenReturn(new BigDecimal(500));
+        when(product3.getPrice()).thenReturn(new BigDecimal(300));
+
+        when(product1.getStock()).thenReturn(50);
+        when(product2.getStock()).thenReturn(40);
+        when(product3.getStock()).thenReturn(35);
+
+
+        ArrayList<Product> filteredList = (ArrayList) productDao.findProducts("","price","desc");
+
+        assertSame(product2.getId(),filteredList.get(0).getId());
     }
 
     @Test(expected = IllegalArgumentException.class)
