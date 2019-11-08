@@ -2,7 +2,6 @@ package com.es.phoneshop.model.product;
 
 import java.math.BigDecimal;
 import java.util.Currency;
-import java.util.Date;
 
 public class PriceHistory {
     private String date;

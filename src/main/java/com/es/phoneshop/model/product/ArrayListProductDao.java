@@ -13,10 +13,6 @@ public class ArrayListProductDao implements ProductDao {
         products = new ArrayList<>();
     }
 
-    private ArrayListProductDao(List<Product> products)
-    {
-        this.products=products;
-    }
 
     synchronized public static ArrayListProductDao getInstance() {
         if (instance == null) {
@@ -25,10 +21,6 @@ public class ArrayListProductDao implements ProductDao {
         return instance;
     }
 
-    public static void setInstance(List<Product> products)
-    {
-        instance = new ArrayListProductDao(products);
-    }
 
     public List<Product> getAllProducts() {
         return products;
@@ -77,36 +69,19 @@ public class ArrayListProductDao implements ProductDao {
         return queryResult;
     }
     private List<Product> sorting (String sort, String order, List<Product> sortProducts) {
-        switch (sort){
-            case "description":
-                switch (order){
-                    case "asc":
-                        sortProducts = sortProducts.stream()
-                                .sorted(Comparator.comparing(Product::getDescription))
-                                .collect(Collectors.toList());
-                        return sortProducts;
-                    case "desc":
-                        sortProducts = sortProducts.stream()
-                                .sorted(Comparator.comparing(Product::getDescription)
-                                        .reversed())
-                                .collect(Collectors.toList());
-                        return sortProducts;
-                }
-            case "price":
-                switch (order){
-                    case "asc":
-                        sortProducts = sortProducts.stream()
-                                .sorted((o1, o2) -> o1.getPrice().subtract(o2.getPrice()).intValue())
-                                .collect(Collectors.toList());
-                        return sortProducts;
-                    case "desc":
-                        sortProducts = sortProducts.stream()
-                                .sorted((o1, o2) -> o2.getPrice().subtract(o1.getPrice()).intValue())
-                                .collect(Collectors.toList());
-                        return sortProducts;
-                }
+        Comparator<Product> comparator=null;
+        if (sort.equals("description")) {
+            comparator = Comparator.comparing(Product::getDescription);
         }
-        return sortProducts;
+
+        if (sort.equals("price")) {
+            comparator = Comparator.comparing(Product::getPrice);
+        }
+
+        if (order.equals("desc")) {
+            comparator = comparator.reversed();
+        }
+        return sortProducts.stream().sorted(comparator).collect(Collectors.toList());
     }
 
     @Override
@@ -129,5 +104,8 @@ public class ArrayListProductDao implements ProductDao {
                 .filter(product1 -> (product1.getId().equals(id)))
                 .findFirst().orElseThrow(() -> new IllegalArgumentException("Product with such id is not found"));
         products.remove(product);
+    }
+    public void clearAll() {
+        products.clear();
     }
 }

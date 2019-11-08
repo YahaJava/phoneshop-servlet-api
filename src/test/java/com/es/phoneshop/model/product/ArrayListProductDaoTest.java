@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class ArrayListProductDaoTest {
-    private ProductDao productDao;
+    private ArrayListProductDao productDao;
 
     @Mock
     private Product product1;
@@ -31,11 +31,14 @@ public class ArrayListProductDaoTest {
 
     @Before
     public void setUp() {
-        ArrayListProductDao.setInstance(new ArrayList<Product>(Arrays.asList(product1,product2,product3)));
         productDao =ArrayListProductDao.getInstance();
+        productDao.clearAll();
         when(product1.getId()).thenReturn(1L);
         when(product2.getId()).thenReturn(2L);
         when(product3.getId()).thenReturn(3L);
+        productDao.save(product1);
+        productDao.save(product2);
+        productDao.save(product3);
     }
     @Test
     public void testGetProductExisting() {
@@ -126,9 +129,5 @@ public class ArrayListProductDaoTest {
     public void testSaveProductThatExist() {
         productDao.save(product3);
     }
-
-
-
-
 
 }
