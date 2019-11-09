@@ -1,5 +1,6 @@
 package com.es.phoneshop.model.product;
 
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -8,7 +9,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
@@ -31,19 +31,19 @@ public class ArrayListProductDaoTest {
 
     @Before
     public void setUp() {
-        productDao =ArrayListProductDao.getInstance();
-        productDao.clearAll();
+        productDao = ArrayListProductDao.getInstance();
         when(product1.getId()).thenReturn(1L);
         when(product2.getId()).thenReturn(2L);
         when(product3.getId()).thenReturn(3L);
-        productDao.save(product1);
-        productDao.save(product2);
-        productDao.save(product3);
+        productDao.setProduct(product1);
+        productDao.setProduct(product2);
+        productDao.setProduct(product3);
     }
+
     @Test
     public void testGetProductExisting() {
         Product product = productDao.getProduct(1L);
-        assertSame(product1,product);
+        assertSame(product1, product);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -52,7 +52,7 @@ public class ArrayListProductDaoTest {
     }
 
     @Test
-    public void testFindProductsSearch(){
+    public void testFindProductsSearch() {
 
         when(product1.getPrice()).thenReturn(new BigDecimal(100));
         when(product2.getPrice()).thenReturn(new BigDecimal(200));
@@ -66,12 +66,12 @@ public class ArrayListProductDaoTest {
         when(product2.getDescription()).thenReturn("Samsung G6");
         when(product3.getDescription()).thenReturn("Apple 8");
 
-       assertTrue( productDao.findProducts("samsung","price","asc").size() == 2);
+        assertTrue(productDao.findProducts("samsung", "price", "asc").size() == 2);
 
     }
 
     @Test
-    public void testFindProductsSortDescriptionAscending(){
+    public void testFindProductsSortDescriptionAscending() {
 
         when(product1.getPrice()).thenReturn(new BigDecimal(100));
         when(product2.getPrice()).thenReturn(new BigDecimal(200));
@@ -85,14 +85,14 @@ public class ArrayListProductDaoTest {
         when(product2.getDescription()).thenReturn("Nokia X6");
         when(product3.getDescription()).thenReturn("Apple 8");
 
-        ArrayList<Product> filteredList = (ArrayList) productDao.findProducts("","description","asc");
+        ArrayList<Product> filteredList = (ArrayList) productDao.findProducts("", "description", "asc");
 
-        assertSame(product3.getId(),filteredList.get(0).getId());
+        assertSame(product3.getId(), filteredList.get(0).getId());
 
     }
 
     @Test
-    public void testFindProductsSortPriceDescending(){
+    public void testFindProductsSortPriceDescending() {
 
         when(product1.getPrice()).thenReturn(new BigDecimal(200));
         when(product2.getPrice()).thenReturn(new BigDecimal(500));
@@ -103,9 +103,9 @@ public class ArrayListProductDaoTest {
         when(product3.getStock()).thenReturn(35);
 
 
-        ArrayList<Product> filteredList = (ArrayList) productDao.findProducts("","price","desc");
+        ArrayList<Product> filteredList = (ArrayList) productDao.findProducts("", "price", "desc");
 
-        assertSame(product2.getId(),filteredList.get(0).getId());
+        assertSame(product2.getId(), filteredList.get(0).getId());
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -118,6 +118,7 @@ public class ArrayListProductDaoTest {
     public void testDeleteProductNull() {
         productDao.delete(100L);
     }
+
     @Test
     public void testSaveProduct() {
         when(product4.getId()).thenReturn(14L);

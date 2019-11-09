@@ -1,6 +1,5 @@
 package com.es.phoneshop.model.product;
 
-import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -14,7 +13,7 @@ public class ArrayListProductDao implements ProductDao {
     }
 
 
-    synchronized public static ArrayListProductDao getInstance() {
+    public static ArrayListProductDao getInstance() {
         if (instance == null) {
             instance = new ArrayListProductDao();
         }
@@ -24,6 +23,10 @@ public class ArrayListProductDao implements ProductDao {
 
     public List<Product> getAllProducts() {
         return products;
+    }
+
+    protected void setProduct(Product product) {
+        products.add(product);
     }
 
     @Override
@@ -43,33 +46,32 @@ public class ArrayListProductDao implements ProductDao {
     }
 
     @Override
-    public synchronized List<Product> findProducts(String query,String sort,String order) {
+    public synchronized List<Product> findProducts(String query, String sort, String order) {
         List<Product> productList = products.stream()
                 .filter(product -> ((product.getStock() > 0) && (product.getPrice() != null)))
                 .collect(Collectors.toList());
-        if(query!=null&&!query.equals(""))
-        {
-            productList = search(query,productList);
+        if (query != null && !query.equals("")) {
+            productList = search(query, productList);
         }
-        if(sort!=null)
-        {
-            productList = sorting(sort,order,productList);
+        if (sort != null) {
+            productList = sorting(sort, order, productList);
         }
         return productList;
     }
-    private List<Product> search(String query,List<Product> searchProducts)
-    {
+
+    private List<Product> search(String query, List<Product> searchProducts) {
         String[] arrayOfWordsFromQuery = query.toLowerCase().split(" ");
         List<Product> queryResult = new ArrayList<>();
-        for (String word:arrayOfWordsFromQuery) {
+        for (String word : arrayOfWordsFromQuery) {
             queryResult.addAll(searchProducts.stream()
                     .filter(product -> (product.getDescription().toLowerCase().contains(word)))
                     .collect(Collectors.toList()));
         }
         return queryResult;
     }
-    private List<Product> sorting (String sort, String order, List<Product> sortProducts) {
-        Comparator<Product> comparator=null;
+
+    private List<Product> sorting(String sort, String order, List<Product> sortProducts) {
+        Comparator<Product> comparator = null;
         if (sort.equals("description")) {
             comparator = Comparator.comparing(Product::getDescription);
         }
@@ -93,8 +95,7 @@ public class ArrayListProductDao implements ProductDao {
         }
     }
 
-    private boolean checkIdForSave(Product product)
-    {
+    private boolean checkIdForSave(Product product) {
         return products.stream().noneMatch(product1 -> product1.getId().equals(product.getId()));
     }
 
@@ -105,7 +106,5 @@ public class ArrayListProductDao implements ProductDao {
                 .findFirst().orElseThrow(() -> new IllegalArgumentException("Product with such id is not found"));
         products.remove(product);
     }
-    public void clearAll() {
-        products.clear();
-    }
+
 }
