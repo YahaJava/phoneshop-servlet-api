@@ -5,10 +5,10 @@ import com.es.phoneshop.model.product.Product;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
+import java.util.Optional;
 
 public class HttpSessionCartService implements CartService {
     private static final String CART_ATRIBUTE = CartService.class + ".cart";
-    private static CartService instance;
 
     private Cart cart;
 
@@ -17,10 +17,7 @@ public class HttpSessionCartService implements CartService {
     }
 
     public static CartService getInstance() {
-        if (instance == null) {
-            instance = new HttpSessionCartService();
-        }
-        return instance;
+        return HttpSessionCartServiceHolder.httpSessionCartService;
     }
 
     @Override
@@ -38,16 +35,26 @@ public class HttpSessionCartService implements CartService {
         if (quantity > product.getStock()) {
             throw new OutOfStockException(product.getStock());
         }
-        cart.getCartItems().add(new CartItem(product, quantity));
+        Optional<CartItem> cartItem=cart.getCartItems().stream().filter(item -> item.getProduct().equals(product)).findFirst();
+        if (cartItem.isPresent()) {
+            cartItem.get().setQuantity(cartItem.get().getQuantity()+quantity);
+        } else {
+            cart.getCartItems().add(new CartItem(product, quantity));
+        }
         recalculate(cart);
     }
 
     private void recalculate(Cart cart) {
         cart.setTotalQuantity(cart.getCartItems().stream()
-                .mapToInt(item -> item.getQuantity())
+                .mapToInt(CartItem::getQuantity)
                 .sum());
         cart.setTotalPrice(new BigDecimal(cart.getCartItems().stream()
                 .mapToInt(item -> item.getProduct().getPrice().intValue() * item.getQuantity())
                 .sum()));
     }
+
+    private static class HttpSessionCartServiceHolder {
+        static final HttpSessionCartService httpSessionCartService = new HttpSessionCartService();
+    }
+
 }

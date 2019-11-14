@@ -2,7 +2,7 @@ package com.es.phoneshop.web;
 
 import com.es.phoneshop.model.product.ArrayListProductDao;
 import com.es.phoneshop.model.product.ProductDao;
-import com.es.phoneshop.model.product.ProductHistory;
+import com.es.phoneshop.model.product.ProductHistoryService;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -13,12 +13,12 @@ import java.io.IOException;
 public class ProductListPageServlet extends HttpServlet {
 
     private ProductDao productDao;
-    private ProductHistory productHistory;
+    private ProductHistoryService productHistoryService;
 
     @Override
     public void init() {
         productDao = ArrayListProductDao.getInstance();
-        productHistory = ProductHistory.getInstance();
+        productHistoryService = ProductHistoryService.getInstance();
     }
 
     @Override
@@ -27,7 +27,7 @@ public class ProductListPageServlet extends HttpServlet {
         String sort = request.getParameter("sort");
         String order = request.getParameter("order");
         request.setAttribute("products", productDao.findProducts(query, sort, order));
-        request.setAttribute("recentProducts", productHistory.getRecentProducts());
+        request.setAttribute("recentProducts", productHistoryService.getRecentProducts());
         request.getRequestDispatcher("/WEB-INF/pages/productList.jsp").forward(request, response);
     }
 

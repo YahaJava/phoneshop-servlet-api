@@ -2,8 +2,7 @@ package com.es.phoneshop.model.card;
 
 import com.es.phoneshop.model.product.Product;
 
-public class CartItem
-{
+public class CartItem {
     private Product product;
     private int quantity;
 
@@ -18,5 +17,9 @@ public class CartItem
 
     public int getQuantity() {
         return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 }

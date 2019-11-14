@@ -8,7 +8,7 @@ import com.es.phoneshop.model.exceptions.OutOfStockException;
 import com.es.phoneshop.model.product.ArrayListProductDao;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.ProductDao;
-import com.es.phoneshop.model.product.ProductHistory;
+import com.es.phoneshop.model.product.ProductHistoryService;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -24,13 +24,13 @@ public class ProductDetailsPageServlet extends HttpServlet {
 
     private ProductDao productDao;
     private CartService cartService;
-    private ProductHistory productHistory;
+    private ProductHistoryService productHistoryService;
 
     @Override
     public void init() {
         productDao = ArrayListProductDao.getInstance();
         cartService = HttpSessionCartService.getInstance();
-        productHistory = ProductHistory.getInstance();
+        productHistoryService = ProductHistoryService.getInstance();
     }
 
 
@@ -40,13 +40,10 @@ public class ProductDetailsPageServlet extends HttpServlet {
         try {
             Product product = productDao.getProduct(code);
             showPage(request, response, product);
-            if (productHistory.getRecentProducts().size() > 2 & productHistory.save(product)) {
-                productHistory.delete();
-            }
-
+            productHistoryService.save(product);
         } catch (IllegalArgumentException e) {
             request.setAttribute("product", code);
-            request.getRequestDispatcher("/WEB-INF/pages/productNotFound.jsp").forward(request, response);
+            response.sendError(404);
         }
     }
 

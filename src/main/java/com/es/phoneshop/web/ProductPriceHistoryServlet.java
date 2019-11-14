@@ -26,7 +26,7 @@ public class ProductPriceHistoryServlet extends HttpServlet {
             request.getRequestDispatcher("/WEB-INF/pages/productPriceHistory.jsp").forward(request, response);
         } catch (IllegalArgumentException e) {
             request.setAttribute("product", code);
-            request.getRequestDispatcher("/WEB-INF/pages/productNotFound.jsp").forward(request, response);
+            response.sendError(404);
         }
     }
 

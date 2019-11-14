@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 public class ArrayListProductDao implements ProductDao {
 
     private List<Product> products;
-    private static ArrayListProductDao instance;
 
     private ArrayListProductDao() {
         products = new ArrayList<>();
@@ -14,10 +13,7 @@ public class ArrayListProductDao implements ProductDao {
 
 
     public static ArrayListProductDao getInstance() {
-        if (instance == null) {
-            instance = new ArrayListProductDao();
-        }
-        return instance;
+        return ProductDaoHolder.productDao;
     }
 
 
@@ -25,7 +21,7 @@ public class ArrayListProductDao implements ProductDao {
         return products;
     }
 
-    protected void setProduct(Product product) {
+    public void setProduct(Product product) {
         products.add(product);
     }
 
@@ -105,6 +101,10 @@ public class ArrayListProductDao implements ProductDao {
                 .filter(product1 -> (product1.getId().equals(id)))
                 .findFirst().orElseThrow(() -> new IllegalArgumentException("Product with such id is not found"));
         products.remove(product);
+    }
+
+    private static class ProductDaoHolder {
+        static final ArrayListProductDao productDao = new ArrayListProductDao();
     }
 
 }
