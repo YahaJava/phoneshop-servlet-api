@@ -1,10 +1,11 @@
 package com.es.phoneshop.model.product;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ProductHistoryService {
-    List<Product> recentProducts;
+    private List<Product> recentProducts;
 
     private ProductHistoryService() {
         recentProducts = new ArrayList<>();
@@ -14,18 +15,28 @@ public class ProductHistoryService {
         return ProductHistoryServiceHolder.productHistoryService;
     }
 
+    public List<Product> getRecentProducts(HttpServletRequest request) {
+        recentProducts = (List<Product>) request.getSession().getAttribute("recentProducts");
+        if (recentProducts == null) {
+            recentProducts = new ArrayList<>();
+            request.getSession().setAttribute("recentProducts", recentProducts);
+        }
+        return recentProducts;
+    }
+
     public List<Product> getRecentProducts() {
         return recentProducts;
     }
 
     public void setRecentProducts(List<Product> recentProducts) {
+        recentProducts.clear();
         this.recentProducts = recentProducts;
     }
 
-    public synchronized boolean save(Product product) {
+    public synchronized boolean save(Product product, HttpServletRequest request) {
         if (checkIdForSave(product)) {
             recentProducts.add(product);
-            if (getRecentProducts().size() > 3) {
+            if (recentProducts.size() > 3) {
                 delete();
             }
             return true;

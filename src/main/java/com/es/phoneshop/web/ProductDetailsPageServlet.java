@@ -1,9 +1,9 @@
 package com.es.phoneshop.web;
 
 
-import com.es.phoneshop.model.card.Cart;
-import com.es.phoneshop.model.card.CartService;
-import com.es.phoneshop.model.card.HttpSessionCartService;
+import com.es.phoneshop.model.cart.Cart;
+import com.es.phoneshop.model.cart.CartService;
+import com.es.phoneshop.model.cart.HttpSessionCartService;
 import com.es.phoneshop.model.exceptions.OutOfStockException;
 import com.es.phoneshop.model.product.ArrayListProductDao;
 import com.es.phoneshop.model.product.Product;
@@ -40,7 +40,7 @@ public class ProductDetailsPageServlet extends HttpServlet {
         try {
             Product product = productDao.getProduct(code);
             showPage(request, response, product);
-            productHistoryService.save(product);
+            productHistoryService.save(product, request);
         } catch (IllegalArgumentException e) {
             request.setAttribute("product", code);
             response.sendError(404);
@@ -57,7 +57,6 @@ public class ProductDetailsPageServlet extends HttpServlet {
             int quantity = NumberFormat.getNumberInstance(locale).parse(quantityString).intValue();
             Cart cart = cartService.getCart(request);
             cartService.add(cart, product, quantity);
-            product.setStock(product.getStock() - quantity);
         } catch (ParseException e) {
             error = "Not a number";
         } catch (OutOfStockException e) {

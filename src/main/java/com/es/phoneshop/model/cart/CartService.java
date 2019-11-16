@@ -1,4 +1,4 @@
-package com.es.phoneshop.model.card;
+package com.es.phoneshop.model.cart;
 
 import com.es.phoneshop.model.product.Product;
 

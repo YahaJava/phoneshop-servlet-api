@@ -21,8 +21,8 @@ public class ArrayListProductDao implements ProductDao {
         return products;
     }
 
-    public void setProduct(Product product) {
-        products.add(product);
+    protected void setProducts(ArrayList<Product> productList) {
+        products=productList;
     }
 
     @Override

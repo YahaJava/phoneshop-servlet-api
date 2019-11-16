@@ -1,4 +1,4 @@
-package com.es.phoneshop.model.card;
+package com.es.phoneshop.model.cart;
 
 import com.es.phoneshop.model.exceptions.OutOfStockException;
 import com.es.phoneshop.model.product.Product;
@@ -35,13 +35,20 @@ public class HttpSessionCartService implements CartService {
         if (quantity > product.getStock()) {
             throw new OutOfStockException(product.getStock());
         }
-        Optional<CartItem> cartItem=cart.getCartItems().stream().filter(item -> item.getProduct().equals(product)).findFirst();
+        Optional<CartItem> cartItem = findItem(cart, product);
         if (cartItem.isPresent()) {
-            cartItem.get().setQuantity(cartItem.get().getQuantity()+quantity);
+            cartItem.get().setQuantity(cartItem.get().getQuantity() + quantity);
         } else {
             cart.getCartItems().add(new CartItem(product, quantity));
         }
+        product.setStock(product.getStock() - quantity);
         recalculate(cart);
+    }
+
+    private Optional<CartItem> findItem(Cart cart, Product product) {
+        return cart.getCartItems().stream()
+                .filter(item -> item.getProduct().equals(product))
+                .findFirst();
     }
 
     private void recalculate(Cart cart) {

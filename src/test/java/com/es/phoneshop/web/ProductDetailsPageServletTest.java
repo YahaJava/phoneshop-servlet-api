@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Locale;
 
 import static org.mockito.ArgumentMatchers.*;
@@ -44,11 +45,10 @@ public class ProductDetailsPageServletTest {
 
     @Before
     public void setup() {
-        productDao=ArrayListProductDao.getInstance();
+        productDao = ArrayListProductDao.getInstance();
         when(request.getRequestDispatcher(anyString())).thenReturn(requestDispatcher);
         when(request.getSession()).thenReturn(session);
         when(session.getAttribute(anyString())).thenReturn(null);
-
         when(product1.getId()).thenReturn(1L);
         when(product2.getId()).thenReturn(2L);
         when(product3.getId()).thenReturn(3L);
@@ -57,9 +57,10 @@ public class ProductDetailsPageServletTest {
         when(product3.getCode()).thenReturn("iphone");
         when(product2.getStock()).thenReturn(5);
         when(product2.getPrice()).thenReturn(BigDecimal.TEN);
-        productDao.setProduct(product1);
-        productDao.setProduct(product2);
-        productDao.setProduct(product3);
+        productDao.getAllProducts().clear();
+        productDao.save(product1);
+        productDao.save(product2);
+        productDao.save(product3);
         servlet.init();
     }
 
@@ -72,11 +73,11 @@ public class ProductDetailsPageServletTest {
 
     @Test
     public void testDoGetProductFound() throws ServletException, IOException {
-        when(request.getPathInfo()).thenReturn("/sgs3");
+        when(request.getPathInfo()).thenReturn("/iphone");
         servlet.doGet(request, response);
 
         verify(request).setAttribute(eq("cart"), any());
-        verify(request).setAttribute(eq("product"), eq(product2));
+        verify(request).setAttribute(eq("product"), eq(product3));
         verify(request).getRequestDispatcher("/WEB-INF/pages/productDetails.jsp");
         verify(requestDispatcher).forward(request, response);
     }
@@ -94,7 +95,7 @@ public class ProductDetailsPageServletTest {
 
     @Test
     public void testDoPostProductNotFound() throws ServletException, IOException {
-        when(request.getPathInfo()).thenReturn("/sgs3");
+        when(request.getPathInfo()).thenReturn("/sgs");
         when(request.getParameter("quantity")).thenReturn("wrongValue");
         when(request.getLocale()).thenReturn(Locale.ENGLISH);
 
