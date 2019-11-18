@@ -32,19 +32,29 @@ public class HttpSessionCartService implements CartService {
 
     @Override
     public void add(Cart cart, Product product, int quantity) {
-        if (quantity > product.getStock()) {
-            throw new OutOfStockException(product.getStock());
-        }
         Optional<CartItem> cartItem = findItem(cart, product);
         if (cartItem.isPresent()) {
+            checkEnoughtStock1(quantity,product);
+            checkEnoughtStock2(cartItem,quantity,product);
             cartItem.get().setQuantity(cartItem.get().getQuantity() + quantity);
         } else {
+            checkEnoughtStock1(quantity,product);
             cart.getCartItems().add(new CartItem(product, quantity));
         }
-        product.setStock(product.getStock() - quantity);
         recalculate(cart);
     }
 
+    private void checkEnoughtStock1(int quantity,Product product){
+        if (quantity > product.getStock()) {
+            throw new OutOfStockException(product.getStock());
+        }
+    }
+
+    private void checkEnoughtStock2(Optional<CartItem> cartItem,int quantity,Product product){
+        if (cartItem.get().getQuantity() + quantity > product.getStock()) {
+            throw new OutOfStockException(product.getStock());
+        }
+    }
     private Optional<CartItem> findItem(Cart cart, Product product) {
         return cart.getCartItems().stream()
                 .filter(item -> item.getProduct().equals(product))

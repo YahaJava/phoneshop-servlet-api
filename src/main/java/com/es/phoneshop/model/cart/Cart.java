@@ -1,9 +1,12 @@
 
 package com.es.phoneshop.model.cart;
 
+import com.es.phoneshop.model.product.Product;
+
 import java.util.ArrayList;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 public class Cart {
     private List<CartItem> cartItems;
