@@ -20,7 +20,7 @@ public class Product {
     public Product() {
     }
 
-    public Product(Long id, String code, String description, BigDecimal price, Currency currency, int stock, String imageUrl,List<PriceHistory> priceHistory) {
+    public Product(Long id, String code, String description, BigDecimal price, Currency currency, int stock, String imageUrl, List<PriceHistory> priceHistory) {
         this.id = id;
         this.code = code;
         this.description = description;
@@ -28,7 +28,7 @@ public class Product {
         this.currency = currency;
         this.stock = stock;
         this.imageUrl = imageUrl;
-        this.priceHistory=priceHistory;
+        this.priceHistory = priceHistory;
     }
 
     public Long getId() {
@@ -94,4 +94,5 @@ public class Product {
     public void setPriceHistory(ArrayList<PriceHistory> priceHistory) {
         this.priceHistory = priceHistory;
     }
+
 }

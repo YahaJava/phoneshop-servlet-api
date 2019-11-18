@@ -35,9 +35,11 @@ public class ArrayListProductDaoTest {
         when(product1.getId()).thenReturn(1L);
         when(product2.getId()).thenReturn(2L);
         when(product3.getId()).thenReturn(3L);
-        productDao.setProduct(product1);
-        productDao.setProduct(product2);
-        productDao.setProduct(product3);
+        ArrayList<Product> list = new ArrayList<>();
+        list.add(product1);
+        list.add(product2);
+        list.add(product3);
+        productDao.setProducts(list);
     }
 
     @Test

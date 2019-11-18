@@ -11,22 +11,22 @@ import java.io.IOException;
 
 public class ProductPriceHistoryServlet extends HttpServlet {
 
-    private ProductDao products;
+    private ProductDao productDao;
 
     @Override
     public void init() {
-        products = ArrayListProductDao.getInstance();
+        productDao = ArrayListProductDao.getInstance();
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String code = request.getPathInfo().substring(1);
         try {
-            request.setAttribute("product", products.getProduct(code));
+            request.setAttribute("product", productDao.getProduct(code));
             request.getRequestDispatcher("/WEB-INF/pages/productPriceHistory.jsp").forward(request, response);
         } catch (IllegalArgumentException e) {
             request.setAttribute("product", code);
-            request.getRequestDispatcher("/WEB-INF/pages/productNotFound.jsp").forward(request, response);
+            response.sendError(404);
         }
     }
 
