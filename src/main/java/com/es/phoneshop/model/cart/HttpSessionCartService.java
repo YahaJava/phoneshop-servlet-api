@@ -32,29 +32,53 @@ public class HttpSessionCartService implements CartService {
 
     @Override
     public void add(Cart cart, Product product, int quantity) {
+        checkCorrectQuantity(quantity);
         Optional<CartItem> cartItem = findItem(cart, product);
         if (cartItem.isPresent()) {
-            checkEnoughtStock1(quantity,product);
-            checkEnoughtStock2(cartItem,quantity,product);
+            checkEnoughtStock1(quantity, product);
+            checkEnoughtStock2(cartItem, quantity, product);
             cartItem.get().setQuantity(cartItem.get().getQuantity() + quantity);
         } else {
-            checkEnoughtStock1(quantity,product);
+            checkEnoughtStock1(quantity, product);
             cart.getCartItems().add(new CartItem(product, quantity));
         }
         recalculate(cart);
     }
 
-    private void checkEnoughtStock1(int quantity,Product product){
+    @Override
+    public void update(Cart cart, Product product, int quantity) {
+        checkCorrectQuantity(quantity);
+        Optional<CartItem> cartItem = findItem(cart, product);
+        checkEnoughtStock1(quantity, product);
+        cartItem.get().setQuantity(quantity);
+        recalculate(cart);
+    }
+
+    @Override
+    public void delete(Cart cart, Product product) {
+        Optional<CartItem> cartItem = findItem(cart, product);
+        cart.getCartItems().remove(cartItem.get());
+        recalculate(cart);
+    }
+
+    private void checkEnoughtStock1(int quantity, Product product) {
         if (quantity > product.getStock()) {
             throw new OutOfStockException(product.getStock());
         }
     }
 
-    private void checkEnoughtStock2(Optional<CartItem> cartItem,int quantity,Product product){
+    private void checkEnoughtStock2(Optional<CartItem> cartItem, int quantity, Product product) {
         if (cartItem.get().getQuantity() + quantity > product.getStock()) {
             throw new OutOfStockException(product.getStock());
         }
     }
+
+    private void checkCorrectQuantity(int quantity) {
+        if (quantity <= 0) {
+            throw new IllegalArgumentException();
+        }
+    }
+
     private Optional<CartItem> findItem(Cart cart, Product product) {
         return cart.getCartItems().stream()
                 .filter(item -> item.getProduct().equals(product))

@@ -4,7 +4,6 @@
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 
 <jsp:useBean id="product" class="com.es.phoneshop.model.product.Product" scope="request"/>
-<jsp:useBean id="cart" type="com.es.phoneshop.model.cart.Cart" scope="request"/>
 
 <tags:master pageTitle="Product Details">
     <table>
@@ -31,26 +30,4 @@
     </c:if>
     </form>
     </p>
-    <c:if test="${not empty cart.cartItems}">
-        <h3>Your cart:</h3>
-        <table>
-            <tr>
-                <td>Product</td>
-                <td>Quantity</td>
-                <td>Price</td>
-            </tr>
-            <c:forEach var="item" items="${cart.cartItems}">
-                <tr>
-                    <td>${item.product.description}</td>
-                    <td>${item.quantity}</td>
-                    <td>${item.product.price*item.quantity}</td>
-                </tr>
-            </c:forEach>
-            <tr>
-                <td>Total:</td>
-                <td>${cart.totalQuantity}</td>
-                <td>${cart.totalPrice}</td>
-            </tr>
-        </table>
-    </c:if>
 </tags:master>

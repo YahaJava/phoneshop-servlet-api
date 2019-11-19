@@ -61,6 +61,8 @@ public class ProductDetailsPageServlet extends HttpServlet {
             error = "Not a number";
         } catch (OutOfStockException e) {
             error = "Not enought stock. Availible: " + e.getValidStock();
+        } catch (IllegalArgumentException e) {
+            error = "Incorrect number";
         }
         if (error != null) {
             request.setAttribute("error", error);
