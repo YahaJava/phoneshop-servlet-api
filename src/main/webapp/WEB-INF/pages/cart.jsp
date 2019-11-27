@@ -42,10 +42,7 @@
                             </c:if>
                         </td>
                     </tr>
-                    <form id="delete"
-                          action="${pageContext.servletContext.contextPath}/cart/deleteCartItem"
-                          method="post">
-                    </form>
+
                 </c:forEach>
                 <tr>
                     <td>Total:</td>
@@ -53,6 +50,10 @@
                     <td>${cart.totalPrice}</td>
                     <td><button form="update">update</button></td>
                 </tr>
+            </form>
+            <form id="delete"
+                  action="${pageContext.servletContext.contextPath}/cart/deleteCartItem"
+                  method="post">
             </form>
         </table>
     </c:if>

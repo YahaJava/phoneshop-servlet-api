@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ tag trimDirectiveWhitespaces="true" %>
 <%@ attribute name="pageTitle" required="true" %>
 
@@ -13,7 +14,7 @@
       <img src="${pageContext.servletContext.contextPath}/images/logo.svg"/>
       PhoneShop
     </a>
-    <jsp:include page="/WEB-INF/pages/miniCart.jsp"/>
+    <c:import url="/cart/minicart" />
   </header>
   <main>
     <jsp:doBody/>
