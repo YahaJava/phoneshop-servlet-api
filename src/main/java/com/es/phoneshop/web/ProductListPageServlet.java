@@ -16,13 +16,11 @@ public class ProductListPageServlet extends HttpServlet {
 
     private ProductDao productDao;
     private ProductHistoryService productHistoryService;
-    private CartService cartService;
 
     @Override
     public void init() {
         productDao = ArrayListProductDao.getInstance();
         productHistoryService = ProductHistoryService.getInstance();
-        cartService = HttpSessionCartService.getInstance();
     }
 
     @Override
@@ -32,7 +30,6 @@ public class ProductListPageServlet extends HttpServlet {
         String order = request.getParameter("order");
         request.setAttribute("products", productDao.findProducts(query, sort, order));
         request.setAttribute("recentProducts", productHistoryService.getRecentProducts(request));
-        request.setAttribute("cart", cartService.getCart(request));
         request.getRequestDispatcher("/WEB-INF/pages/productList.jsp").forward(request, response);
     }
 
