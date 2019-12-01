@@ -33,9 +33,6 @@ public class HttpSessionCartService implements CartService {
         if (quantity <= 0) {
             throw new IllegalArgumentException();
         }
-        if (quantity > product.getStock()) {
-            throw new OutOfStockException(product.getStock());
-        }
         Optional<CartItem> optionalCartItem = findItem(cart, product);
         CartItem cartItem = optionalCartItem.orElse(new CartItem(product, 0));
         if (cartItem.getQuantity() + quantity > product.getStock()) {
