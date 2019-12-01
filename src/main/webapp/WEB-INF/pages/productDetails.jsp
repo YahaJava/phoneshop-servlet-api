@@ -6,27 +6,32 @@
 <jsp:useBean id="product" class="com.es.phoneshop.model.product.Product" scope="request"/>
 
 <tags:master pageTitle="Product Details">
-
-    <p>
+    <div class="d-flex flex-row m-2">
+    <div>
         <img class="img-fluid float-left"
              src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${product.imageUrl}"/>
-    </p>
-    <div>
-    <h4>${product.description}<br/></h4>
-    <h4>Price:<fmt:formatNumber value="${product.price}" type="currency"
-                                currencySymbol="${product.currency.symbol}"/></h4>
-        <p>
-            <form method="post" action=${pageContext.servletContext.contextPath}/products/${product.code}>
-                Quantity: <input type="text" name="quantity" value="${not empty param.quantity ? param.quantity : 1}">
-                <input type="submit" value="add to cart"><br/>
+    </div>
+    <div  class="w-25" >
+        <h4>${product.description}<br/></h4>
+        <h4>Price:<fmt:formatNumber value="${product.price}" type="currency"
+                                    currencySymbol="${product.currency.symbol}"/></h4>
+        <form method="post" action=${pageContext.servletContext.contextPath}/products/${product.code}>
+            <div class="input-group mb-3 ">
+                <input type="text" class="form-control" placeholder="Quantity" name="quantity"
+                       value="${not empty param.quantity ? param.quantity : 1}">
+                <div class="input-group-append">
+                    <input class="btn btn-outline-secondary" type="submit" value="add to cart">
+                </div>
+            </div>
                 <c:if test="${not empty error}">
-        <p style="color: red">${error}</p>
-        </c:if>
-        <c:if test="${param.success}">
-            <p style="color: green">Product added to card!</p>
-        </c:if>
+                    <p class="alert alert-danger">${error}</p>
+                </c:if>
+                <c:if test="${param.success}">
+                    <p class="alert alert-success">Product added to card!</p>
+                </c:if>
+
         </form>
-        </p>
+    </div>
     </div>
 
 </tags:master>

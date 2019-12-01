@@ -6,22 +6,20 @@
 <jsp:useBean id="products" type="java.util.ArrayList" scope="request"/>
 <jsp:useBean id="recentProducts" type="java.util.List" scope="request"/>
 <tags:master pageTitle="Product List">
-    <p>
+    <p class="text-center">
         Welcome to Expert-Soft training!
     </p>
-    <form>
-        <div>
-        <input type="text" name="query" value="${param.query}">
-        <button  type="submit">Search</button>
-        </div>
+    <form class="form-inline text-right ml-5">
+        <input  class="form-control " type="text" name="query" value="${param.query}">
+        <button class="btn btn-outline-success m-1" type="submit">Search</button>
     </form>
     <c:if test="${empty products}">
-        <h3>No search results</h3>
+        <h3 class="text-center">No search results</h3>
     </c:if>
     <c:if test="${not empty products}">
-        <table>
+        <table class="table table-hover container">
             <thead>
-            <tr>
+            <tr class="container">
                 <td>Image</td>
                 <td>Description
                     <tags:sort query="${param.query}" sort="description" order="asc"></tags:sort>
@@ -51,21 +49,21 @@
         </table>
     </c:if>
     <c:if test="${not empty recentProducts}">
-        <div>
-        <h3>Recently viewed:</h3>
-        <table>
-            <tr>
-                <c:forEach var="item" items="${recentProducts}">
-                    <td><img class="product-tile"
-                             src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${item.imageUrl}"/><br/>
-                        <a href="<c:url value="/products/${item.code}"/>">${item.description}</a><br/>
-                        <fmt:formatNumber value="${item.price}" type="currency"
-                                          currencySymbol="${item.currency.symbol}"/>
-                    </td>
-                    </td>
-                </c:forEach>
-            </tr>
-        </table>
+        <div class="container">
+            <h3>Recently viewed:</h3>
+            <table>
+                <tr>
+                    <c:forEach var="item" items="${recentProducts}">
+                        <td><img class="product-tile"
+                                 src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${item.imageUrl}"/><br/>
+                            <a href="<c:url value="/products/${item.code}"/>">${item.description}</a><br/>
+                            <fmt:formatNumber value="${item.price}" type="currency"
+                                              currencySymbol="${item.currency.symbol}"/>
+                        </td>
+                        </td>
+                    </c:forEach>
+                </tr>
+            </table>
         </div>
     </c:if>
 </tags:master>
