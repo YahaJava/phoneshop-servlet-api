@@ -7,17 +7,17 @@
 
 <tags:master pageTitle="Your cart">
     <c:if test="${param.delete}">
-        <p style="color: green">Product deleted!</p>
+        <p class="text-center alert alert-success m-2">Product deleted!</p>
     </c:if>
     <c:if test="${param.update}">
-        <p style="color: green">Product quantity updated!</p>
+        <p class="text-center alert alert-success m-2">Product quantity updated!</p>
     </c:if>
     <c:if test="${empty cart.cartItems}">
-        <h3>Your cart is Empty!!!</h3>
+        <h3 class="text-center">Your cart is Empty!!!</h3>
     </c:if>
     <c:if test="${not empty cart.cartItems}">
-        <h3>Your cart:</h3>
-        <table>
+        <h3 class="text-center">Your cart:</h3>
+        <table class="table table-hover container">
             <tr>
                 <td>Product</td>
                 <td>Quantity</td>
@@ -34,11 +34,16 @@
                         <td>${item.quantity}</td>
                         <td>${item.product.price*item.quantity}</td>
                         <td>
-                            <input form="update" type="text" name="quantity" value="${item.quantity}">
-                            <input form="update" type="hidden" name="productCode" value="${item.product.code}"/>
-                            <button form="delete" name="productCode" value="${item.product.code}">delete</button>
+                            <div class="input-group mb-3 ">
+                                <input form="update" class="form-control" type="text" name="quantity"
+                                       value="${item.quantity}">
+                                <input form="update" type="hidden" name="productCode" value="${item.product.code}"/>
+                                    <button form="delete" class="btn btn-outline-secondary ml-1" name="productCode"
+                                            value="${item.product.code}">delete
+                                    </button>
+                            </div>
                             <c:if test="${not empty error[item.product]}">
-                                <p style="color: red">${error[item.product]}</p>
+                                <p class="alert alert-danger m-1">${error[item.product]}</p>
                             </c:if>
                         </td>
                     </tr>
@@ -48,7 +53,9 @@
                     <td>Total:</td>
                     <td>${cart.totalQuantity}</td>
                     <td>${cart.totalPrice}</td>
-                    <td><button form="update">update</button></td>
+                    <td>
+                        <button class="text-right btn btn-info" form="update">update</button>
+                    </td>
                 </tr>
             </form>
             <form id="delete"
