@@ -9,10 +9,18 @@
     <p class="text-center">
         Welcome to Expert-Soft training!
     </p>
-    <form class="form-inline text-right ml-5">
-        <input  class="form-control " type="text" name="query" value="${param.query}">
-        <button class="btn btn-outline-success m-1" type="submit">Search</button>
-    </form>
+    <div class="row">
+        <div class="col">
+        </div>
+        <div class="col">
+        </div>
+        <div class="col">
+            <form class="form-inline text-right ml-5">
+                <input class="form-control " type="text" name="query" value="${param.query}">
+                <button class="btn btn-outline-success m-1" type="submit">Search</button>
+            </form>
+        </div>
+    </div>
     <c:if test="${empty products}">
         <h3 class="text-center">No search results</h3>
     </c:if>
