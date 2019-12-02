@@ -10,10 +10,8 @@ import java.util.Optional;
 public class HttpSessionCartService implements CartService {
     private static final String CART_ATRIBUTE = CartService.class + ".cart";
 
-    private Cart cart;
 
     private HttpSessionCartService() {
-        cart = new Cart();
     }
 
     public static CartService getInstance() {
@@ -32,29 +30,41 @@ public class HttpSessionCartService implements CartService {
 
     @Override
     public void add(Cart cart, Product product, int quantity) {
-        Optional<CartItem> cartItem = findItem(cart, product);
-        if (cartItem.isPresent()) {
-            checkEnoughtStock1(quantity,product);
-            checkEnoughtStock2(cartItem,quantity,product);
-            cartItem.get().setQuantity(cartItem.get().getQuantity() + quantity);
-        } else {
-            checkEnoughtStock1(quantity,product);
-            cart.getCartItems().add(new CartItem(product, quantity));
+        if (quantity <= 0) {
+            throw new IllegalArgumentException();
+        }
+        Optional<CartItem> optionalCartItem = findItem(cart, product);
+        CartItem cartItem = optionalCartItem.orElse(new CartItem(product, 0));
+        if (cartItem.getQuantity() + quantity > product.getStock()) {
+            throw new OutOfStockException(product.getStock());
+        }
+        cartItem.setQuantity(cartItem.getQuantity() + quantity);
+        if (!optionalCartItem.isPresent()) {
+            cart.getCartItems().add(cartItem);
         }
         recalculate(cart);
     }
 
-    private void checkEnoughtStock1(int quantity,Product product){
+    @Override
+    public void update(Cart cart, Product product, int quantity) {
+        if (quantity <= 0) {
+            throw new IllegalArgumentException();
+        }
         if (quantity > product.getStock()) {
             throw new OutOfStockException(product.getStock());
         }
+        Optional<CartItem> cartItem = findItem(cart, product);
+        cartItem.ifPresent(item -> item.setQuantity(quantity));
+        recalculate(cart);
     }
 
-    private void checkEnoughtStock2(Optional<CartItem> cartItem,int quantity,Product product){
-        if (cartItem.get().getQuantity() + quantity > product.getStock()) {
-            throw new OutOfStockException(product.getStock());
-        }
+    @Override
+    public void delete(Cart cart, Product product) {
+        Optional<CartItem> cartItem = findItem(cart, product);
+        cartItem.ifPresent(item -> cart.getCartItems().remove(item));
+        recalculate(cart);
     }
+
     private Optional<CartItem> findItem(Cart cart, Product product) {
         return cart.getCartItems().stream()
                 .filter(item -> item.getProduct().equals(product))

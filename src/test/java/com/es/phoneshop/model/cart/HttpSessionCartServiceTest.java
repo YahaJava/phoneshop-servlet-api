@@ -78,4 +78,21 @@ public class HttpSessionCartServiceTest {
         cartService.add(cart, product1, 30);
     }
 
+    @Test
+    public void testUpdateSuccess() {
+        cartService.update(cart, product, 20);
+        assertSame(cartItem.getQuantity(), 20);
+    }
+
+    @Test(expected = OutOfStockException.class)
+    public void testUpdateNoEnoughtStock() {
+        cartService.update(cart, product, 30);
+    }
+
+    @Test
+    public void testDelete() {
+        cartService.delete(cart, product);
+        assertSame(cart.getCartItems().size(), 0);
+    }
+
 }
