@@ -55,12 +55,17 @@
                     <td>${cart.totalPrice}</td>
                     <td>
                         <button class="text-right btn btn-info" form="update">update</button>
+                        <button class="text-right btn btn-info ml-1" form="checkout">Submit</button>
                     </td>
                 </tr>
             </form>
             <form id="delete"
                   action="${pageContext.servletContext.contextPath}/cart/deleteCartItem"
                   method="post">
+            </form>
+            <form id="checkout"
+                  action="${pageContext.servletContext.contextPath}/checkout"
+                  method="get">
             </form>
         </table>
     </c:if>
