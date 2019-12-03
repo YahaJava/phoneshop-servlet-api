@@ -6,10 +6,10 @@
   <display-name>Phoneshop servlet api training</display-name>
 
   <servlet>
-    <servlet-name>productList</servlet-name>
-    <servlet-class>com.es.phoneshop.web.ProductListPageServlet</servlet-class>
-  </servlet>
-  
+  <servlet-name>productList</servlet-name>
+  <servlet-class>com.es.phoneshop.web.ProductListPageServlet</servlet-class>
+</servlet>
+
   <servlet-mapping>
     <servlet-name>productList</servlet-name>
     <url-pattern>/products</url-pattern>
@@ -56,13 +56,33 @@
   </servlet-mapping>
 
   <servlet>
-    <servlet-name>minicart</servlet-name>
-    <servlet-class>com.es.phoneshop.web.MiniCartServlet</servlet-class>
-  </servlet>
+  <servlet-name>minicart</servlet-name>
+  <servlet-class>com.es.phoneshop.web.MiniCartServlet</servlet-class>
+</servlet>
 
   <servlet-mapping>
     <servlet-name>minicart</servlet-name>
     <url-pattern>/cart/minicart</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>checkoutPage</servlet-name>
+    <servlet-class>com.es.phoneshop.web.CheckoutPageServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>checkoutPage</servlet-name>
+    <url-pattern>/checkout</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>orderOverview</servlet-name>
+    <servlet-class>com.es.phoneshop.web.OrderOverviewPageServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>orderOverview</servlet-name>
+    <url-pattern>/order/overview/*</url-pattern>
   </servlet-mapping>
 
   <listener>
@@ -70,6 +90,15 @@
       com.es.phoneshop.web.ProductDemodataServletContextListener
     </listener-class>
   </listener>
+
+  <filter>
+    <filter-name>dosFilter</filter-name>
+    <filter-class>com.es.phoneshop.filters.DosFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>dosFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
 
   <error-page>
     <error-code>404</error-code>
