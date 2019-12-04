@@ -9,6 +9,8 @@ import com.es.phoneshop.model.product.ArrayListProductDao;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.ProductDao;
 import com.es.phoneshop.model.product.ProductHistoryService;
+import com.es.phoneshop.model.productReview.DefaultReviewService;
+import com.es.phoneshop.model.productReview.ReviewService;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -25,12 +27,14 @@ public class ProductDetailsPageServlet extends HttpServlet {
     private ProductDao productDao;
     private CartService cartService;
     private ProductHistoryService productHistoryService;
+    private ReviewService reviewService;
 
     @Override
     public void init() {
         productDao = ArrayListProductDao.getInstance();
         cartService = HttpSessionCartService.getInstance();
         productHistoryService = ProductHistoryService.getInstance();
+        reviewService = DefaultReviewService.getInstance();
     }
 
 
@@ -79,6 +83,7 @@ public class ProductDetailsPageServlet extends HttpServlet {
     private void showPage(HttpServletRequest request, HttpServletResponse response, Product product) throws ServletException, IOException {
         request.setAttribute("product", product);
         request.setAttribute("cart", cartService.getCart(request));
+        request.setAttribute("reviews", reviewService.getReviews(product));
         request.getRequestDispatcher("/WEB-INF/pages/productDetails.jsp").forward(request, response);
     }
 }
