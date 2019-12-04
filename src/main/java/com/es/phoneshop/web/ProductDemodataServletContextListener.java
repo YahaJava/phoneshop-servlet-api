@@ -4,9 +4,13 @@ import com.es.phoneshop.model.product.ArrayListProductDao;
 import com.es.phoneshop.model.product.PriceHistory;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.ProductDao;
+import com.es.phoneshop.model.productReview.DefaultReviewService;
+import com.es.phoneshop.model.productReview.ProductReview;
+import com.es.phoneshop.model.productReview.ReviewService;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import javax.swing.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Currency;
@@ -16,7 +20,19 @@ public class ProductDemodataServletContextListener implements ServletContextList
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         ProductDao productDao = ArrayListProductDao.getInstance();
+        ReviewService reviewService = DefaultReviewService.getInstance();
         addProducts().forEach(productDao::save);
+        addReviews().forEach(reviewService::add);
+    }
+
+    private List<ProductReview>  addReviews() {
+        List<ProductReview>  productReviews = new ArrayList<>();
+        Currency usd = Currency.getInstance("USD");
+        Product product = new Product(1L, "sgs", "Samsung Galaxy S", new BigDecimal(100), usd, 100, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg",
+                addPriceHistory(new BigDecimal(100)));
+        productReviews.add(new ProductReview("Max","8","Good phone",product));
+        productReviews.add(new ProductReview("Jonhy","6","Not Bad",product));
+        return  productReviews;
     }
 
     @Override
